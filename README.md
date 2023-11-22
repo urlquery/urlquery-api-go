@@ -12,7 +12,7 @@ import (
 	"log"
 	"os"
 	"time"
-	"urlquery/public/urlquery-api-go"
+	"github.com/urlquery/urlquery-api-go"
 )
 
 // Command-line arguments
