@@ -1,9 +1,3 @@
-# urlquery-api-go
-Go implementation of the public REST API of urlquery.net
-
-##Usage
-
-```golang
 package main
 
 import (
@@ -12,7 +6,8 @@ import (
 	"log"
 	"os"
 	"time"
-	"urlquery/public/urlquery-api-go"
+
+	"github.com/urlquery/urlquery-api-go"
 )
 
 // Command-line arguments
@@ -39,6 +34,8 @@ func main() {
 		log.Fatal("submission failed:", err)
 	}
 
+	fmt.Println(queue)
+
 	// status -> queued, processing, done, failed
 	for queue.Status != "done" && queue.Status != "failed" {
 		time.Sleep(3 * time.Second)
@@ -60,4 +57,3 @@ func main() {
 	}
 
 }
-```
