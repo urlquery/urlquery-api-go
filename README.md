@@ -1,7 +1,7 @@
 # urlquery-api-go
-Go implementation of the public REST API of urlquery.net
+Go implementation of the public REST API for urlquery.net
 
-##Usage
+## Usage example
 
 ```golang
 package main
