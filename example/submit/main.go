@@ -11,8 +11,8 @@ import (
 )
 
 // Command-line arguments
-var key = flag.String("apikey", "", "submit url")
-var url = flag.String("submit", "", "urlquery API key")
+var key = flag.String("apikey", "", "urlquery API key")
+var url = flag.String("submit", "", "submit url")
 
 func main() {
 	flag.Parse()
