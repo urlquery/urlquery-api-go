@@ -36,7 +36,7 @@ func (a apiRequest) SetUserNotifyWebhook(webhook string) error {
 		return err
 	}
 
-	return err
+	return nil
 }
 
 func SetUserNotifyWebhookEnable(enabled bool) error {
@@ -51,5 +51,5 @@ func (a apiRequest) SetUserNotifyWebhookEnable(enabled bool) error {
 		return err
 	}
 
-	return err
+	return nil
 }
