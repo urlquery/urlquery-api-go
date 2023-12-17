@@ -1,7 +1,10 @@
 # urlquery-api-go
-Go implementation of the public REST API for urlquery.net
+Go implementation of the public REST API for http://urlquery.net
 
 https://urlquery.net/doc/api/public/v1
+
+Get a APIKEY by creating a account at:
+https://urlquery.net/user/signup
 
 ## Usage example
 
@@ -57,7 +60,9 @@ func main() {
 		fmt.Println(report.String())
 		fmt.Println("\nReport at: https://urlquery.net/report/" + report.ID)
 
-	} else if queue.Status == "failed" {
+	}
+
+	if queue.Status == "failed" {
 		fmt.Println("Processing URL failed!")
 	}
 
