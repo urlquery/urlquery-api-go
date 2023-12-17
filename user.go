@@ -33,7 +33,7 @@ func (a apiRequest) SetUserNotifyWebhook(webhook string) error {
 	apiurl := fmt.Sprintf("https://%s/public/v1/user/notify?webhook.url=%s", a.server, url.QueryEscape(webhook))
 	_, err := apiRequestHandle("PATCH", apiurl, nil, a.key)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	return err
@@ -43,12 +43,12 @@ func SetUserNotifyWebhookEnable(enabled bool) error {
 	return NewDefaultRequest().SetUserNotifyWebhookEnable(enabled)
 }
 
-func (a apiRequest) SetUserNotifyWebhookEnable(enabled string) error {
+func (a apiRequest) SetUserNotifyWebhookEnable(enabled bool) error {
 
 	apiurl := fmt.Sprintf("https://%s/public/v1/user/notify?webhook.enabled=%t", a.server, enabled)
 	_, err := apiRequestHandle("PATCH", apiurl, nil, a.key)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	return err
