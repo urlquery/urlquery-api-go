@@ -34,8 +34,6 @@ func main() {
 		log.Fatal("submission failed:", err)
 	}
 
-	fmt.Println(queue)
-
 	// status -> queued, processing, done, failed
 	for queue.Status != "done" && queue.Status != "failed" {
 		time.Sleep(3 * time.Second)
@@ -52,7 +50,9 @@ func main() {
 		fmt.Println(report.String())
 		fmt.Println("\nReport at: https://urlquery.net/report/" + report.ID)
 
-	} else if queue.Status == "failed" {
+	}
+
+	if queue.Status == "failed" {
 		fmt.Println("Processing URL failed!")
 	}
 
