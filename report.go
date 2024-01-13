@@ -24,7 +24,7 @@ func (api apiRequest) GetReport(report_id string) (*Report, error) {
 }
 
 func GetResourceData(hash string) ([]byte, error) {
-	return NewDefaultRequest().GetReport(hash)
+	return NewDefaultRequest().GetResourceData(hash)
 }
 
 func (api apiRequest) GetResourceData(hash string) ([]byte, error) {
