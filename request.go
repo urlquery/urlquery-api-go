@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 type apiRequest struct {
@@ -49,7 +51,13 @@ func apiRequestHandle(method string, url string, body io.Reader, apikey string) 
 	req.Header.Add("Accept-Encoding", "gzip")
 	req.Header.Add("X-APIKEY", apikey)
 
-	resp, err := http.DefaultClient.Do(req)
+	retryClient := retryablehttp.NewClient()
+	retryClient.RetryMax = 10
+	retryClient.RetryWaitMin = 5 * time.Second
+	client := retryClient.StandardClient() // *http.Client
+	client.Timeout = 60 * time.Second
+
+	resp, err := client.Do(req)
 	if resp != nil {
 		defer resp.Body.Close()
 	}
