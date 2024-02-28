@@ -1,55 +1,61 @@
 package urlquery
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/url"
 )
 
+//-------------------------------
+// GetUser
+//-------------------------------
+
 func GetUser() (*PublicUserInfo, error) {
-	return NewDefaultRequest().GetUser()
+	return DefaultClient.GetUser()
 }
 
-func (a apiRequest) GetUser() (*PublicUserInfo, error) {
-	var usr PublicUserInfo
+func (c *Client) GetUser() (*PublicUserInfo, error) {
 
-	apiurl := fmt.Sprintf("https://%s/public/v1/user", a.server)
-	data, err := apiRequestHandle("GET", apiurl, nil, a.key)
-
+	endpoint := "/public/v1/user"
+	resp, err := c.DoRequest("GET", endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	json.Unmarshal(data, &usr)
-	return &usr, nil
+	reply := new(PublicUserInfo)
+	return reply, DecodeResponse(resp, reply)
 }
+
+//-------------------------------
+// SetUserNotify
+//-------------------------------
 
 func SetUserNotifyWebhook(webhook string) error {
-	return NewDefaultRequest().SetUserNotifyWebhook(webhook)
+	return DefaultClient.SetUserNotifyWebhook(webhook)
 }
 
-func (a apiRequest) SetUserNotifyWebhook(webhook string) error {
+func (c *Client) SetUserNotifyWebhook(webhook string) error {
 
-	apiurl := fmt.Sprintf("https://%s/public/v1/user/notify?webhook.url=%s", a.server, url.QueryEscape(webhook))
-	_, err := apiRequestHandle("PATCH", apiurl, nil, a.key)
+	endpoint := fmt.Sprintf("/public/v1/user/notify?webhook.url=%s", url.QueryEscape(webhook))
+	resp, err := c.DoRequest("GET", endpoint, nil)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return DecodeResponse(resp, nil)
 }
 
 func SetUserNotifyWebhookEnable(enabled bool) error {
-	return NewDefaultRequest().SetUserNotifyWebhookEnable(enabled)
+	return DefaultClient.SetUserNotifyWebhookEnable(enabled)
 }
 
-func (a apiRequest) SetUserNotifyWebhookEnable(enabled bool) error {
+func (c *Client) SetUserNotifyWebhookEnable(enabled bool) error {
 
-	apiurl := fmt.Sprintf("https://%s/public/v1/user/notify?webhook.enabled=%t", a.server, enabled)
-	_, err := apiRequestHandle("PATCH", apiurl, nil, a.key)
+	endpoint := fmt.Sprintf("/public/v1/user/notify?webhook.enabled=%t", enabled)
+
+	resp, err := c.DoRequest("GET", endpoint, nil)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return DecodeResponse(resp, nil)
 }

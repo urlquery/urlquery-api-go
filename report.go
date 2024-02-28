@@ -1,40 +1,43 @@
 package urlquery
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
+//-------------------------------
+// GetReport
+//-------------------------------
+
 func GetReport(report_id string) (*Report, error) {
-	return NewDefaultRequest().GetReport(report_id)
+	return DefaultClient.GetReport(report_id)
 }
 
-func (api apiRequest) GetReport(report_id string) (*Report, error) {
-	var reply Report
-
-	url := fmt.Sprintf("https://%s/public/v1/report/%s", api.server, report_id)
-
-	data, err := apiRequestHandle("GET", url, nil, api.key)
+func (c *Client) GetReport(report_id string) (*Report, error) {
+	endpoint := fmt.Sprintf("/public/v1/report/%s", report_id)
+	resp, err := c.DoRequest("GET", endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	json.Unmarshal(data, &reply)
-	return &reply, err
+	data := new(Report)
+	return data, DecodeResponse(resp, data)
 }
 
-func GetResourceData(hash string) ([]byte, error) {
-	return NewDefaultRequest().GetResourceData(hash)
+//-------------------------------
+// DeleteReport
+//-------------------------------
+
+func DeleteReport(report_id string) error {
+	return DefaultClient.DeleteReport(report_id)
 }
 
-func (api apiRequest) GetResourceData(hash string) ([]byte, error) {
+func (c *Client) DeleteReport(report_id string) error {
 
-	url := fmt.Sprintf("https://%s/restricted/v1/download/resource/%s", api.server, hash)
-
-	data, err := apiRequestHandle("GET", url, nil, api.key)
+	endpoint := fmt.Sprintf("/public/v1/report/%s", report_id)
+	resp, err := c.DoRequest("DELETE", endpoint, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return data, err
+	return DecodeResponse(resp, nil)
 }

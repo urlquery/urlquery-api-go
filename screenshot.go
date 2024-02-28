@@ -2,24 +2,53 @@ package urlquery
 
 import (
 	"fmt"
+	"io"
 )
 
+//-------------------------------
+// GetScreenshot
+//-------------------------------
+
 func GetScreenshot(report_id string) ([]byte, error) {
-	return NewDefaultRequest().GetScreenshot(report_id)
+	return DefaultClient.GetScreenshot(report_id)
 }
 
-func (api apiRequest) GetScreenshot(report_id string) ([]byte, error) {
-	url := fmt.Sprintf("https://%s/public/v1/report/%s/screenshot", api.server, report_id)
-	data, err := apiRequestHandle("GET", url, nil, api.key)
+func (c *Client) GetScreenshot(report_id string) ([]byte, error) {
+	endpoint := fmt.Sprintf("/public/v1/report/%s/screenshot", report_id)
+	resp, err := c.DoRequest("GET", endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	err = handleResponseError(resp)
+	if err != nil {
+		return nil, err
+	}
+	data, err := io.ReadAll(resp.Body)
+	defer resp.Body.Close()
 	return data, err
 }
 
+//-------------------------------
+// GetDomainGraph
+//-------------------------------
+
 func GetDomainGraph(report_id string) ([]byte, error) {
-	return NewDefaultRequest().GetDomainGraph(report_id)
+	return DefaultClient.GetDomainGraph(report_id)
 }
 
-func (api apiRequest) GetDomainGraph(report_id string) ([]byte, error) {
-	url := fmt.Sprintf("https://%s/public/v1/report/%s/domain_graph", api.server, report_id)
-	data, err := apiRequestHandle("GET", url, nil, api.key)
+func (c *Client) GetDomainGraph(report_id string) ([]byte, error) {
+	endpoint := fmt.Sprintf("/public/v1/report/%s/domain_graph", report_id)
+	resp, err := c.DoRequest("GET", endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	err = handleResponseError(resp)
+	if err != nil {
+		return nil, err
+	}
+	data, err := io.ReadAll(resp.Body)
+	defer resp.Body.Close()
 	return data, err
 }

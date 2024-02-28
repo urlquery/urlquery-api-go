@@ -1,42 +1,46 @@
 package urlquery
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 )
 
+//-------------------------------
+// Submit
+//-------------------------------
+
 func Submit(submit SubmitJob) (*QueuedJob, error) {
-	return NewDefaultRequest().Submit(submit)
+	return DefaultClient.Submit(submit)
 }
 
-func (a apiRequest) Submit(submit SubmitJob) (*QueuedJob, error) {
-	var j QueuedJob
+func (c *Client) Submit(submit SubmitJob) (*QueuedJob, error) {
 
-	url := fmt.Sprintf("https://%s/public/v1/submit/url", a.server)
-	data, err := apiRequestHandle("POST", url, strings.NewReader(submit.String()), a.key)
-
+	endpoint := "/public/v1/submit/url"
+	resp, err := c.DoRequest("POST", endpoint, strings.NewReader(submit.String()))
 	if err != nil {
 		return nil, err
 	}
 
-	json.Unmarshal(data, &j)
-	return &j, nil
+	data := new(QueuedJob)
+	return data, DecodeResponse(resp, data)
 }
+
+//-------------------------------
+// GetQueueStatus
+//-------------------------------
 
 func GetQueueStatus(queue_id string) (*QueuedJob, error) {
-	return NewDefaultRequest().GetQueueStatus(queue_id)
+	return DefaultClient.GetQueueStatus(queue_id)
 }
 
-func (a apiRequest) GetQueueStatus(queue_id string) (*QueuedJob, error) {
-	var j QueuedJob
+func (c *Client) GetQueueStatus(queue_id string) (*QueuedJob, error) {
 
-	url := fmt.Sprintf("https://%s/public/v1/submit/status/%s", a.server, queue_id)
-	data, err := apiRequestHandle("GET", url, nil, a.key)
+	endpoint := fmt.Sprintf("/public/v1/submit/status/%s", queue_id)
+	resp, err := c.DoRequest("GET", endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	json.Unmarshal(data, &j)
-	return &j, err
+	data := new(QueuedJob)
+	return data, DecodeResponse(resp, data)
 }

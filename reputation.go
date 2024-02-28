@@ -1,25 +1,26 @@
 package urlquery
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/url"
 )
 
+//-------------------------------
+// CheckReputation
+//-------------------------------
+
 func ReputationCheck(query string) (*ReputationResult, error) {
-	return NewDefaultRequest().ReputationCheck(query)
+	return DefaultClient.ReputationCheck(query)
 }
 
-func (api apiRequest) ReputationCheck(query string) (*ReputationResult, error) {
-	var r ReputationResult
+func (c *Client) ReputationCheck(query string) (*ReputationResult, error) {
 
-	url := fmt.Sprintf("https://%s/public/v1/reputation/check/?query=%s", api.server, url.QueryEscape(query))
-	data, err := apiRequestHandle("GET", url, nil, api.key)
-
+	endpoint := fmt.Sprintf("/public/v1/reputation/check/?query=%s", url.QueryEscape(query))
+	resp, err := c.DoRequest("GET", endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	json.Unmarshal(data, &r)
-	return &r, err
+	var data ReputationResult
+	return &data, DecodeResponse(resp, &data)
 }
