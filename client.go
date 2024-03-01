@@ -67,18 +67,29 @@ func (c *Client) DoRequest(method string, path string, body io.Reader) (*http.Re
 
 // DecodeResponse decodes the HTTP response body.
 func DecodeResponse(resp *http.Response, target interface{}) error {
-	// TODO: maybe add support for decoding Content-Type
 
 	err := handleResponseError(resp)
 	if err != nil {
 		return err
 	}
 
+	err = decodeBody(resp, target)
+	if err != nil {
+		target = nil
+	}
+
+	return err
+}
+
+func decodeBody(resp *http.Response, target interface{}) error {
+	var err error
+
 	if resp.Body == nil || target == nil {
 		return nil // Nothing to decode
 	}
 	defer resp.Body.Close()
 
+	// TODO: add support for decoding Content-Type
 	switch resp.Header.Get("Content-Encoding") {
 	case "gzip":
 		var reader *gzip.Reader
@@ -90,10 +101,6 @@ func DecodeResponse(resp *http.Response, target interface{}) error {
 
 	default:
 		err = json.NewDecoder(resp.Body).Decode(target)
-	}
-
-	if err != nil {
-		target = nil
 	}
 
 	return err
