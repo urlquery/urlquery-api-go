@@ -43,11 +43,11 @@ func (p *searchParams) Encode() string {
 // Search Reports
 //-------------------------------
 
-func Search(queryParams searchParams) (*SearchResponse, error) {
+func Search(queryParams *searchParams) (*SearchResponse, error) {
 	return DefaultClient.Search(queryParams)
 }
 
-func (c *Client) Search(queryParams searchParams) (*SearchResponse, error) {
+func (c *Client) Search(queryParams *searchParams) (*SearchResponse, error) {
 
 	endpoint := fmt.Sprintf("/public/v1/search/reports/?%s", queryParams.Encode())
 	resp, err := c.DoRequest("GET", endpoint, nil)
